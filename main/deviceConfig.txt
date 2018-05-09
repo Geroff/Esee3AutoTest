@@ -1,0 +1,29 @@
+# 配置测试机及测试app相关信息
+
+# 测试平台
+platformName=Android
+
+# 设备SDK版本
+platformVersion=5.1
+
+# 设备名
+deviceName=A10ACN5MEMNS
+
+# 要测试的app包名
+appPackage=com.juanvision.eseecloud30
+
+# app的主入口
+appActivity=com.juanvision.modulelogin.activity.SplashActivity
+
+# 支持输入中文
+unicodeKeyboard=true
+resetKeyboard=true
+
+# 连接Appium服务器超时时间
+newCommandTimeout=150
+
+#测试Toast要用这个框架
+automationName=Uiautomator2
+
+# Appium服务器的地址
+remoteHost=http://127.0.0.1:4723/wd/hub

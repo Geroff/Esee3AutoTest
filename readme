@@ -1,0 +1,6 @@
+项目结构：
+1.cases包下存放的是所有测试用例，base模块是所有测试用例的基类
+2.conf包下存放的是字符串常量
+3.helper包下存放的是工具类，HTMLTestRunner模块用于实现测试报告（来源于网上），ui_helper模块封装了appium的操作方法
+4.main包下存放的是测试主入口main模块，测试报告，设备配置deviceConfig.txt
+5.ui包下存放的view模块用于uiautomatorviewer中获取到的控件id等
