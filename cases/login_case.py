@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from base import BaseCase
+from base_case import BaseCase
 from ui.view import LoginView
 from conf.string import StringManager
 
@@ -94,5 +94,6 @@ class LoginTestCase(BaseCase):
         """
         desired_color = '#ceddf0'
         color = self.uiHelper.get_element_color(LoginView.login_btn_login)
+        # self.uiHelper.save_screen_shot('..\\main\\report\\test_view_color.png')
         print color
         self.assertEqual(color, desired_color)

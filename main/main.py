@@ -2,8 +2,8 @@
 
 import unittest
 from helper.HTMLTestRunner import HTMLTestRunner
-from cases.login import LoginTestCase
-from cases.main import MainTestCase
+from cases.login_case import LoginTestCase
+from cases.main_case import MainTestCase
 
 # 生成报告相关参数
 report_file_name = r'report\test_report.html'
@@ -55,14 +55,14 @@ suit.addTest(LoginTestCase('test_view_color'))
 # ================================================
 
 # ===============直接终端查看结果的时候用=============
-unittest.TextTestRunner(verbosity=2).run(suit)
+# unittest.TextTestRunner(verbosity=2).run(suit)
 # ================================================
 
 # ===============生成html报告的时候用=============
-# with open(report_file_name, 'wb') as test_report_file:
-#     # 生成html的测试报告
-#     runner = HTMLTestRunner(stream=test_report_file,
-#                             title=report_title,
-#                             description=report_description)
-#     runner.run(suit)
+with open(report_file_name, 'wb') as test_report_file:
+    # 生成html的测试报告
+    runner = HTMLTestRunner(stream=test_report_file,
+                            title=report_title,
+                            description=report_description)
+    runner.run(suit)
 # ================================================

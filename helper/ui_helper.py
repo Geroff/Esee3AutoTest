@@ -550,6 +550,13 @@ class UiHelper(object):
     """
     def save_screen_shot(self, path_on_pc):
         self._driver.save_screenshot(path_on_pc)
+        size = (341, 640)
+        try:
+            im = Image.open(path_on_pc)
+            im.thumbnail(size)
+            im.save(path_on_pc, "png")
+        except IOError:
+            print("cannot create thumbnail for", path_on_pc)
 
     def set_network(self, net_type):
         pass
@@ -640,6 +647,7 @@ class UiHelper(object):
             temp_image_file = '..\\main\\report\\temp_color.png'
             # 保存截图
             self._driver.save_screenshot(temp_image_file)
+            sleep(1)
             x1 = element.location.get('x')
             y1 = element.location.get('y')
             width = element.size.get('width')

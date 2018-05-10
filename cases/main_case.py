@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import time
-from base import BaseCase
+from base_case import BaseCase
 from ui.view import LoginView
 from ui.view import MainView
 
