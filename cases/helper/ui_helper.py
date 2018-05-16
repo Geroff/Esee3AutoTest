@@ -3,15 +3,10 @@
 import os
 from time import sleep
 from enum import Enum
-# 此模块需要安装Appium-Python-Client
-from appium import webdriver
+
 # 此模块需要安装Pillow
 from PIL import Image
 
-# returns abs path relative to this file and not cwd
-PATH = lambda p: os.path.abspath(
-    os.path.join(os.path.dirname(__file__), p)
-)
 
 """
 Connection types are specified here:
@@ -36,32 +31,8 @@ class ConnectionType(Enum):
 
 class UiHelper(object):
 
-    def __init__(self, config_path):
-        self.desired_caps = {}
-        self._driver = None
-        self.remoteHost = "http://127.0.0.1:4723/wd/hub"
-        # 获取设备配置
-        with open(config_path) as file_object:
-            for line in file_object:
-                if line.startswith("#"):
-                    continue
-
-                line = line.strip()
-                words = line.split("=")
-                if len(words) != 2:
-                    continue
-
-                if words[0] == 'app':
-                    print(PATH(words[1]))
-                    self.desired_caps[words[0]] = PATH(words[1])
-                elif words[0] == 'remoteHost':
-                    self.remoteHost = words[1]
-                else:
-                    self.desired_caps[words[0]] = words[1]
-
-    def init_driver(self):
-        # 连接服务器
-        self._driver = webdriver.Remote(self.remoteHost, self.desired_caps)
+    def __init__(self, driver):
+        self._driver = driver
 
     def quit_driver(self):
         # 断开服务器连接
@@ -631,6 +602,9 @@ class UiHelper(object):
         except:
             return False
 
+    def get_current_network(self):
+        return self._driver.network_connection
+
     """
     获取控件某个像素点的颜色
     
@@ -687,3 +661,12 @@ class UiHelper(object):
             return color
         else:
             return None
+
+    def open_notification(self):
+        """
+        打开通知栏,Android API >= 18
+        """
+        self._driver.open_notifications()
+
+    def get_screen_size(self):
+        self._driver
