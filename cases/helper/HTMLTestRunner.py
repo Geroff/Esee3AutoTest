@@ -14,7 +14,7 @@ The simplest way to use this is to invoke its main method. E.g.
 
 
 For more customization options, instantiates a HTMLTestRunner object.
-HTMLTestRunner is a counterpart to unittest's TextTestRunner. E.g.
+HTMLTestRunner is a counterpart to unittest's TextTestRunner. E.g..
 
     # output to a file
     fp = file('my_report.html', 'wb')
@@ -429,20 +429,23 @@ a.popup_link:hover {
 <col align='right' />
 </colgroup>
 <tr id='header_row'>
-    <td>Test Group/Test case</td>
+    <td colspan='2'>Test Group/Test case</td>
     <td>Count</td>
     <td>Pass</td>
     <td>Fail</td>
     <td>Error</td>
     <td>View</td>
+    <td>Screenshot</td>
+
 </tr>
 %(test_list)s
 <tr id='total_row'>
-    <td>Total</td>
+    <td colspan='2'>Total</td>
     <td>%(count)s</td>
     <td>%(Pass)s</td>
     <td>%(fail)s</td>
     <td>%(error)s</td>
+    <td>&nbsp;</td>
     <td>&nbsp;</td>
 </tr>
 </table>
@@ -450,18 +453,21 @@ a.popup_link:hover {
 
     REPORT_CLASS_TMPL = r"""
 <tr class='%(style)s'>
+    <td>case_id</td>
     <td>%(desc)s</td>
     <td>%(count)s</td>
     <td>%(Pass)s</td>
     <td>%(fail)s</td>
     <td>%(error)s</td>
     <td><a href="javascript:showClassDetail('%(cid)s',%(count)s)">Detail</a></td>
+    <td>&nbsp;</td>
 </tr>
 """ # variables: (style, desc, count, Pass, fail, error, cid)
 
 
     REPORT_TEST_WITH_OUTPUT_TMPL = r"""
 <tr id='%(tid)s' class='%(Class)s'>
+    <td  align='center'>%(caseid)s</td>
     <td class='%(style)s'><div class='testcase'>%(desc)s</div></td>
     <td colspan='5' align='center'>
 
@@ -481,12 +487,17 @@ a.popup_link:hover {
     <!--css div popup end-->
 
     </td>
+    <td align='center'>
+    <a target="_blank" href="%(image)s" title="%(image)s ">
+    <img src="..\img.png" height=20 width=20 border=0 /></a>
+    </td>
 </tr>
 """ # variables: (tid, Class, style, desc, status)
 
 
     REPORT_TEST_NO_OUTPUT_TMPL = r"""
 <tr id='%(tid)s' class='%(Class)s'>
+    <td class='%(style)s'>case_id</td>
     <td class='%(style)s'><div class='testcase'>%(desc)s</div></td>
     <td colspan='5' align='center'>%(status)s</td>
 </tr>
@@ -497,7 +508,13 @@ a.popup_link:hover {
 %(id)s: %(output)s
 """ # variables: (id, output)
 
+    REPORT_TEST_OUTPUT_IMAGE = r"""
+%(screenshot)s
+"""
 
+    REPORT_TEST_OUTPUT_CASEID = r"""
+%(case_id)s
+"""
 
     # ------------------------------------------------------------------------
     # ENDING
@@ -521,6 +538,8 @@ class _TestResult(TestResult):
         self.success_count = 0
         self.failure_count = 0
         self.error_count = 0
+        self.image_view = 0
+
         self.verbosity = verbosity
 
         # result is a list of result in 4 tuple
@@ -547,7 +566,8 @@ class _TestResult(TestResult):
 
     def complete_output(self):
         """
-        Disconnect output redirection and return buffer.
+        Disconnect
+        output redirection and return buffer.
         Safe to call multiple times.
         """
         if self.stdout0:
@@ -777,13 +797,20 @@ class HTMLTestRunner(Template_mixin):
             id = tid,
             output = saxutils.escape(uo+ue),
         )
-
+        image = self.REPORT_TEST_OUTPUT_IMAGE % dict(
+	        screenshot = saxutils.escape(uo+ue)
+        )
+        caseid = self.REPORT_TEST_OUTPUT_CASEID % dict(
+	        case_id = saxutils.escape(uo+ue)
+        )
         row = tmpl % dict(
             tid = tid,
             Class = (n == 0 and 'hiddenRow' or 'none'),
             style = n == 2 and 'errorCase' or (n == 1 and 'failCase' or 'none'),
             desc = desc,
             script = script,
+            image = image[image.find("image"):(int(image.find("png"))+3)],
+            caseid = caseid[caseid.find("case"):(int(caseid.find("case"))+9)],
             status = self.STATUS[n],
         )
         rows.append(row)
